@@ -2,11 +2,63 @@
 export default {
   data() {
     return {
-
+      suggestions: []
     }
   },
   methods: {
+    weatherPage() {
+      let location = document.querySelector('input').value;
+      this.$router.push(`/weather/${location}`)
+    },
+    findLocation() {
+      let location = document.querySelector('input').value;
+      const response = fetch(`http://api.weatherapi.com/v1/search.json?key=${process.env.VUE_APP_WEATHERAPI_KEY}&q=${location}`);
+      response.then(res => {
+        return res.json();
+      }).then(data => {
+        this.suggestions.push(data);
+        // console.log(this.suggestions[this.suggestions.length - 1]);
 
+        if (this.suggestions[this.suggestions.length - 1].length > 0) {
+          const suggestions = document.getElementById('suggestions');
+          const mainContainer = document.createElement('div');
+          suggestions.style.display = 'block';
+
+          this.suggestions[this.suggestions.length - 1].forEach(item => {
+            console.log(item);
+
+            const elementCard = document.createElement('div');
+            elementCard.style.height = '5vh';
+            elementCard.style.backgroundColor = 'whitesmoke';
+            elementCard.style.border = '1px solid #C6C6C6';
+            elementCard.style.marginBottom = '0.5vh';
+            elementCard.style.boxShadow = 'rgba(0, 0, 0, 0.24) 0px 3px 8px';
+            elementCard.style.cursor = 'pointer';
+
+            elementCard.addEventListener('click', selectLocation);
+
+            const cardData = document.createElement('div');
+            cardData.textContent = `${item.name}, ${item.country}`;
+            cardData.style.textAlign = 'center';
+            cardData.style.fontFamily = 'Poppins';
+            cardData.style.fontSize = '14px';
+            cardData.style.textTransform = 'uppercase';
+            cardData.style.letterSpacing = '2px';
+            cardData.style.lineHeight = '5vh';
+
+            function selectLocation() {
+              document.querySelector('input').value = cardData.textContent;
+              document.getElementById('suggestions').style.display = 'none';
+            };
+
+            elementCard.append(cardData);
+            mainContainer.append(elementCard);
+          });
+
+          suggestions.replaceChildren(mainContainer);
+        };
+      })
+    }
   },
   mounted() {
 
@@ -17,13 +69,16 @@ export default {
 <template>
   <div class="homeContainer">
     <div class="title">Welcome to your preferred choice <br> of weather forecasts!</div>
-    <div class="searchContainer">
-      <input 
-        type="text"
-        placeholder="Search for a specific location" />
-      <router-link to="/weather">
-        <button class="btn">Search</button>
-      </router-link>
+    <div class="bottomContainers">
+      <div class="searchContainer">
+        <input 
+          @input="findLocation"
+          type="text"
+          placeholder="Search for a specific location"
+          minlength="3" />
+        <button @click="weatherPage" class="btn">Search</button>
+      </div>
+      <div id="suggestions"></div>
     </div>
   </div>
 </template>
@@ -50,16 +105,25 @@ export default {
     margin-bottom: 5vh;
   }
 
-  .searchContainer {
+  .bottomContainers {
     align-self: flex-start;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     margin-top: 5vh;
+  }
+
+  .searchContainer {
+    display: flex;
+    align-items: center;
   }
 
   .searchContainer input {
     width: 30vw;
     height: 7vh;
+    font-family: 'Poppins', sans-serif;
+    text-transform: uppercase;
+    font-size: 14px;
+    padding-left: 1vw;
     background-color: whitesmoke;
     border: 1px solid #C6C6C6;
     outline: none;
@@ -98,9 +162,13 @@ export default {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   }
 
-  @keyframes typing {
-    from { width: 0 }
-    to { width: 100% }
+  #suggestions {
+    width: 40vw;
+    margin-top: 2vh;
+  }
+
+  .mainContainer {
+    background-color: whitesmoke;
   }
 
   @media screen and (max-width: 700px) {

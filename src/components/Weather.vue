@@ -15,7 +15,9 @@ export default {
 </script>
 
 <template>
-  <h1>Weather!</h1>
+  <div class="weatherContainer">
+    <p>Location is: {{ $route.params.location }}</p>
+  </div>
 </template>
 
 <style scoped>

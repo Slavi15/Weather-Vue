@@ -9,7 +9,7 @@ import './assets/main.css';
 
 const routes = [
     { path: '/', component: Home },
-    { path: '/weather', component: Weather }
+    { path: '/weather/:location', component: Weather }
 ];
 
 const router = createRouter({
