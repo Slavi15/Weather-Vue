@@ -12,12 +12,12 @@ export default {
     },
     findLocation() {
       let location = document.querySelector('input').value;
-      const response = fetch(`http://api.weatherapi.com/v1/search.json?key=${process.env.VUE_APP_WEATHERAPI_KEY}&q=${location}`);
+      const KEY = import.meta.env.VITE_WEATHERAPI_KEY;
+      const response = fetch(`http://api.weatherapi.com/v1/search.json?key=${KEY}&q=${location}`);
       response.then(res => {
         return res.json();
       }).then(data => {
         this.suggestions.push(data);
-        // console.log(this.suggestions[this.suggestions.length - 1]);
 
         if (this.suggestions[this.suggestions.length - 1].length > 0) {
           const suggestions = document.getElementById('suggestions');
@@ -25,8 +25,6 @@ export default {
           suggestions.style.display = 'block';
 
           this.suggestions[this.suggestions.length - 1].forEach(item => {
-            console.log(item);
-
             const elementCard = document.createElement('div');
             elementCard.style.height = '5vh';
             elementCard.style.backgroundColor = 'whitesmoke';
