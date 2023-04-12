@@ -13,14 +13,16 @@ export default {
     findLocation() {
       let location = document.querySelector('input').value;
       const KEY = import.meta.env.VITE_WEATHERAPI_KEY;
+
       const response = fetch(`http://api.weatherapi.com/v1/search.json?key=${KEY}&q=${location}`);
       response.then(res => {
         return res.json();
       }).then(data => {
         this.suggestions.push(data);
 
+        const suggestions = document.getElementById('suggestions');
+
         if (this.suggestions[this.suggestions.length - 1].length > 0) {
-          const suggestions = document.getElementById('suggestions');
           const mainContainer = document.createElement('div');
           suggestions.style.display = 'block';
 
@@ -54,6 +56,8 @@ export default {
           });
 
           suggestions.replaceChildren(mainContainer);
+        } else {
+          suggestions.style.display = 'none';
         };
       })
     }
