@@ -15,9 +15,7 @@ export default {
 </script>
 
 <template>
-  <div class="container">
-    <router-view></router-view>
-  </div>
+  <h1>Home Page!</h1>
 </template>
 
 <style scoped>

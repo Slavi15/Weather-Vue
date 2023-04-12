@@ -15,9 +15,7 @@ export default {
 </script>
 
 <template>
-  <div class="container">
-    <router-view></router-view>
-  </div>
+  <h1>Weather!</h1>
 </template>
 
 <style scoped>
