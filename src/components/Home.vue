@@ -8,7 +8,7 @@ export default {
   methods: {
     weatherPage() {
       let location = document.querySelector('input').value;
-      this.$router.push(`/weather/${location}`)
+      this.$router.push(`/weather/${location}`);
     },
     findLocation() {
       let location = document.querySelector('input').value;
@@ -87,7 +87,7 @@ export default {
 
 <style scoped>
   .homeContainer {
-    background-image: url('./images/nature_1.jpg');
+    background-image: url('./images/landing.jpg');
     display: grid;
     grid-template-rows: 50% 50%;
     grid-template-columns: auto;

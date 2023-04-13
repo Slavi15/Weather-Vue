@@ -2,6 +2,11 @@ import { createApp } from 'vue';
 import { createRouter, createWebHashHistory } from 'vue-router';
 import App from './App.vue';
 
+import { OhVueIcon, addIcons } from "oh-vue-icons";
+import { IoPartlySunnyOutline, CoLocationPin, WiCelsius, WiRaindrop, WiCloudDown, WiStrongWind, CoChevronLeft, CoChevronRight, WiDaySunny, WiRain, WiCloudy, WiDayCloudy } from "oh-vue-icons/icons";
+
+addIcons(IoPartlySunnyOutline, CoLocationPin, WiCelsius, WiRaindrop, WiCloudDown, WiRain, WiStrongWind, WiDaySunny, CoChevronLeft, CoChevronRight, WiCloudy, WiDayCloudy, );
+
 import Home from './components/Home.vue';
 import Weather from './components/Weather.vue';
 
@@ -17,4 +22,4 @@ const router = createRouter({
     routes: routes
 });
 
-createApp(App).use(router).mount('#app');
+createApp(App).use(router).component('v-icon', OhVueIcon).mount('#app');
