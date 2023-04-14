@@ -9,12 +9,13 @@ export default {
 
         const KEY = import.meta.env.VITE_WEATHERAPI_KEY;
 
-        const realtimeData = ref(null);
+        const realtimeData = ref([]);
 
-        const response = fetch(`http://api.weatherapi.com/v1/forecast.json?key=${KEY}&q=${location}&aqi=yes`);
+        const response = fetch(`http://api.weatherapi.com/v1/forecast.json?key=${KEY}&q=${location}&days=7&aqi=yes`);
         response.then(res => {
             return res.json();
         }).then(data => {
+            console.log(data);
             realtimeData.value = data;
         });
 
@@ -24,6 +25,59 @@ export default {
         landingPage() {
             this.$router.push(`/`);
         }
+    },
+    mounted() {
+        const weekContainer = document.getElementById('weekForecast');
+        const mainContainer = document.createElement('div');
+        mainContainer.style.height = '100%';
+        mainContainer.style.display = 'grid';
+        mainContainer.style.gridTemplateColumns = '14.285% 14.285% 14.285% 14.285% 14.285% 14.285% 14.285%';
+
+        function unixToDate(dateepoch) {
+            let date = new Date(dateepoch * 1000);
+            let day = date.getDate().toString().padStart(2, '0');
+            let month = (date.getMonth() + 1).toString().padStart(2, '0');
+            let year = date.getFullYear();
+
+            return `${day}/${month}/${year}`;
+        };
+
+        this.realtimeData.forecast.forecastday.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.style.height = '90%';
+            card.style.width = '90%';
+            card.style.alignSelf = 'center';
+            card.style.justifySelf = 'center';
+            card.style.display = 'flex';
+            card.style.flexDirection = 'column';
+            card.style.alignItems = 'center';
+            card.style.padding = '10px';
+
+            card.addEventListener('mouseover', () => {
+                card.style.boxShadow = 'rgba(100, 100, 111, 1) 0px 7px 29px 0px';
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.boxShadow = 'none';
+            });
+
+            const day = document.createElement('div');
+            day.textContent = unixToDate(item.date_epoch);
+
+            const icon = document.createElement('img');
+            icon.src = item.day.condition.icon;
+            icon.style.margin = '2vh auto';
+
+            const degrees = document.createElement('div');
+            degrees.textContent = `${item.day.avgtemp_c}°C`;
+
+            card.append(day);
+            card.append(icon);
+            card.append(degrees);
+            mainContainer.append(card);
+        });
+
+        weekContainer.append(mainContainer);
     }
 }
 </script>
@@ -65,15 +119,19 @@ export default {
                 </div>
             </div>
         </div>
+        <div id="weekForecast"></div>
     </div>
 </template>
 
 <style scoped>
 .weatherContainer {
     height: 100vh;
+    background-image: url('./images/landing.jpg');
+    background-size: cover;
     display: grid;
+    grid-template-rows: 70vh 30vh;
     font-family: 'Roboto Mono', monospace;
-    background-color: whitesmoke;
+    color: white;
 }
 
 .currentWeather {
@@ -98,6 +156,7 @@ export default {
     display: flex;
     font-family: 'Roboto Mono', monospace;
     font-size: 14px;
+    color: white;
     align-items: center;
     background-color: transparent;
     border: none;

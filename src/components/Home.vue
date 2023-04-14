@@ -88,6 +88,7 @@ export default {
 <style scoped>
   .homeContainer {
     background-image: url('./images/landing.jpg');
+    background-size: cover;
     display: grid;
     grid-template-rows: 50% 50%;
     grid-template-columns: auto;
@@ -199,6 +200,10 @@ export default {
       height: 6vh;
       width: 40vw;
       margin-top: 2vh;
+    }
+
+    #suggestions {
+      width: 80vw;
     }
   }
 </style>
