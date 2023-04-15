@@ -53,21 +53,21 @@ export default {
                 };
 
                 const images = {
-                    '0': "url('/images/aurora.png')",
-                    '1': "url('/images/buildings.jpg')",
-                    '2': "url('/images/conifers_road.jpg')",
-                    '3': "url('/images/dock_lake.jpg')",
-                    '4': "url('/images/fall_foggy.jpg')",
-                    '5': "url('/images/fern.jpg')",
-                    '6': "url('/images/forest_path.jpg')",
-                    '7': "url('/images/grand_canyon.jpg')",
-                    '8': "url('/images/hills.jpg')",
-                    '9': "url('/images/landing.jpg')",
-                    '10': "url('/images/mountain_lake.jpg')",
-                    '11': "url('/images/nature_canyon.jpg')",
-                    '12': "url('/images/river_canyon.jpg')",
-                    '13': "url('/images/sea_coast.jpg')",
-                    '14': "url('/images/trees_sunset.jpg')"
+                    '0': "url('@/assets/images/aurora.png')",
+                    '1': "url('@/assets/images/buildings.jpg')",
+                    '2': "url('@/assets/images/conifers_road.jpg')",
+                    '3': "url('@/assets/images/dock_lake.jpg')",
+                    '4': "url('@/assets/images/fall_foggy.jpg')",
+                    '5': "url('@/assets/images/fern.jpg')",
+                    '6': "url('@/assets/images/forest_path.jpg')",
+                    '7': "url('@/assets/images/grand_canyon.jpg')",
+                    '8': "url('@/assets/images/hills.jpg')",
+                    '9': "url('@/assets/images/landing.jpg')",
+                    '10': "url('@/assets/images/mountain_lake.jpg')",
+                    '11': "url('@/assets/images/nature_canyon.jpg')",
+                    '12': "url('@/assets/images/river_canyon.jpg')",
+                    '13': "url('@/assets/images/sea_coast.jpg')",
+                    '14': "url('@/assets/images/trees_sunset.jpg')"
                 };
 
                 const random = Math.floor(Math.random() * 15);
