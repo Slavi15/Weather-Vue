@@ -1,28 +1,33 @@
 <script>
-import { ref } from 'vue';
-import { useRoute } from 'vue-router';
-
 export default {
-    setup() {
-        const route = useRoute();
-        const location = route.params.location;
-
-        const KEY = import.meta.env.VITE_WEATHERAPI_KEY;
-
-        const realtimeData = ref([]);
-
-        const response = fetch(`https://api.weatherapi.com/v1/forecast.json?key=${KEY}&q=${location}&days=7&aqi=yes`);
-        response.then(res => {
-            return res.json();
-        }).then(data => {
-            realtimeData.value = data;
-        });
-
-        return { realtimeData };
+    data() {
+        return {
+            realtimeData: []
+        }
+    },
+    created() {
+        this.$watch(
+            () => this.$route.params,
+            () => {
+                this.fetchWeatherData()
+            },
+            { immediate: true }
+        )
     },
     methods: {
         landingPage() {
             this.$router.push(`/`);
+        },
+        fetchWeatherData() {
+            const location = this.$route.params.location;
+            const KEY = import.meta.env.VITE_WEATHERAPI_KEY;
+
+            const response = fetch(`https://api.weatherapi.com/v1/forecast.json?key=${KEY}&q=${location}&days=7&aqi=yes`);
+            response.then(res => {
+                return res.json();
+            }).then(data => {
+                this.realtimeData = data;
+            });
         }
     },
     mounted() {
@@ -72,44 +77,46 @@ export default {
         weatherContainer.style.backgroundRepeat = 'no-repeat';
         weatherContainer.style.backgroundSize = 'cover';
 
-        this.realtimeData.forecast.forecastday.forEach(item => {
-            const card = document.createElement('div');
-            card.style.height = '90%';
-            card.style.width = '90%';
-            card.style.alignSelf = 'center';
-            card.style.justifySelf = 'center';
-            card.style.display = 'flex';
-            card.style.flexDirection = 'column';
-            card.style.alignItems = 'center';
-            card.style.padding = '10px';
+        if (this.realtimeData.forecast.forecastday !== undefined) {
+            this.realtimeData.forecast.forecastday.forEach(item => {
+                const card = document.createElement('div');
+                card.style.height = '90%';
+                card.style.width = '90%';
+                card.style.alignSelf = 'center';
+                card.style.justifySelf = 'center';
+                card.style.display = 'flex';
+                card.style.flexDirection = 'column';
+                card.style.alignItems = 'center';
+                card.style.padding = '10px';
 
-            card.addEventListener('mouseover', () => {
-                card.style.boxShadow = 'rgba(100, 100, 111, 1) 0px 7px 29px 0px';
+                card.addEventListener('mouseover', () => {
+                    card.style.boxShadow = 'rgba(100, 100, 111, 1) 0px 7px 29px 0px';
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.boxShadow = 'none';
+                });
+
+                if (window.matchMedia('(max-width: 800px)').matches) {
+                    card.style.height = '100%';
+                }
+
+                const day = document.createElement('div');
+                day.textContent = unixToDate(item.date_epoch);
+
+                const icon = document.createElement('img');
+                icon.src = item.day.condition.icon;
+                icon.style.margin = '2vh auto';
+
+                const degrees = document.createElement('div');
+                degrees.textContent = `${item.day.avgtemp_c}°C`;
+
+                card.append(day);
+                card.append(icon);
+                card.append(degrees);
+                mainContainer.append(card);
             });
-
-            card.addEventListener('mouseleave', () => {
-                card.style.boxShadow = 'none';
-            });
-
-            if (window.matchMedia('(max-width: 800px)').matches) {
-                card.style.height = '100%';
-            }
-
-            const day = document.createElement('div');
-            day.textContent = unixToDate(item.date_epoch);
-
-            const icon = document.createElement('img');
-            icon.src = item.day.condition.icon;
-            icon.style.margin = '2vh auto';
-
-            const degrees = document.createElement('div');
-            degrees.textContent = `${item.day.avgtemp_c}°C`;
-
-            card.append(day);
-            card.append(icon);
-            card.append(degrees);
-            mainContainer.append(card);
-        });
+        };
 
         weekContainer.append(mainContainer);
     }
@@ -120,10 +127,11 @@ export default {
     <div class="weatherContainer">
         <div class="currentWeather">
             <div class="leftSide">
-                <img class="weatherIcon" :src="realtimeData.current.condition.icon" />
-                <p class="condition">{{ realtimeData.current.condition.text }}</p>
-                <p class="location">{{ realtimeData.location.name }}, {{ realtimeData.location.country }}</p>
-                <div class="temperature">{{ realtimeData.current.temp_c }}°C</div>
+                <img class="weatherIcon" v-if="realtimeData.current.condition.icon !== undefined" :src="realtimeData.current.condition.icon" />
+                <p class="condition" v-if="realtimeData.current.condition.text !== undefined">{{ realtimeData.current.condition.text }}</p>
+                <p class="location" v-if="realtimeData.location.name !== undefined && realtimeData.location.country !== undefined">{{ realtimeData.location.name }}, {{
+                    realtimeData.location.country }}</p>
+                <div class="temperature" v-if="realtimeData.current.temp_c !== undefined">{{ realtimeData.current.temp_c }}°C</div>
                 <button @click="landingPage" class="locationButton">
                     <v-icon name="co-location-pin" />
                     <div class="text">Change location</div>
@@ -132,26 +140,27 @@ export default {
             <div class="rightSide">
                 <div class="humidity">
                     <v-icon name="wi-raindrop" scale="2.5" />
-                    <div class="text">Humidity {{ realtimeData.current.humidity }}%</div>
+                    <div class="text" v-if="realtimeData.current.humidity !== undefined">Humidity {{ realtimeData.current.humidity }}%</div>
                 </div>
                 <div class="pressure">
                     <v-icon name="wi-cloud-down" scale="2.5" />
-                    <div class="text">Air Pressure {{ (realtimeData.current.pressure_mb * 0.0155).toFixed(2) }} PSI
+                    <div class="text" v-if="realtimeData.current.pressure_mb !== undefined">Air Pressure {{ (realtimeData.current.pressure_mb * 0.0155).toFixed(2) }} PSI
                     </div>
                 </div>
                 <div class="windSpeed">
                     <v-icon name="wi-strong-wind" scale="2.5" />
-                    <div class="text">Wind speed {{ realtimeData.current.wind_kph }} km/h</div>
+                    <div class="text" v-if="realtimeData.current.wind_kph !== undefined">Wind speed {{ realtimeData.current.wind_kph }} km/h</div>
                 </div>
                 <div class="rainChance">
                     <v-icon name="wi-rain" scale="2.5" />
-                    <div class="text">Chance of Rain {{ realtimeData.forecast.forecastday[0].day.daily_chance_of_rain
+                    <div class="text" v-if="realtimeData.forecast.forecastday[0].day.daily_chance_of_rain !== undefined">Chance of Rain {{
+                        realtimeData.forecast.forecastday[0].day.daily_chance_of_rain
                     }}%
                     </div>
                 </div>
                 <div class="uvIndex">
                     <v-icon name="wi-day-sunny" scale="2.5" />
-                    <div class="text">UV Index {{ realtimeData.current.uv }}</div>
+                    <div class="text" v-if="realtimeData.current.uv !== undefined">UV Index {{ realtimeData.current.uv }}</div>
                 </div>
             </div>
         </div>
