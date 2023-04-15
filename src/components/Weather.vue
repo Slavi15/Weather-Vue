@@ -34,6 +34,11 @@ export default {
         mainContainer.style.display = 'grid';
         mainContainer.style.gridTemplateColumns = '14.285% 14.285% 14.285% 14.285% 14.285% 14.285% 14.285%';
 
+        if (window.matchMedia('(max-width: 800px)').matches) {
+            mainContainer.style.display = 'grid';
+            mainContainer.style.gridTemplateColumns = '100%';
+        }
+
         function unixToDate(dateepoch) {
             let date = new Date(dateepoch * 1000);
             let day = date.getDate().toString().padStart(2, '0');
@@ -63,6 +68,8 @@ export default {
 
         const random = Math.floor(Math.random() * 15);
         weatherContainer.style.backgroundImage = images[random];
+        weatherContainer.style.backgroundAttachment = 'fixed';
+        weatherContainer.style.backgroundRepeat = 'no-repeat';
         weatherContainer.style.backgroundSize = 'cover';
 
         this.realtimeData.forecast.forecastday.forEach(item => {
@@ -83,6 +90,10 @@ export default {
             card.addEventListener('mouseleave', () => {
                 card.style.boxShadow = 'none';
             });
+
+            if (window.matchMedia('(max-width: 800px)').matches) {
+                card.style.height = '100%';
+            }
 
             const day = document.createElement('div');
             day.textContent = unixToDate(item.date_epoch);
@@ -125,7 +136,8 @@ export default {
                 </div>
                 <div class="pressure">
                     <v-icon name="wi-cloud-down" scale="2.5" />
-                    <div class="text">Air Pressure {{ (realtimeData.current.pressure_mb * 0.0155).toFixed(2) }} PSI</div>
+                    <div class="text">Air Pressure {{ (realtimeData.current.pressure_mb * 0.0155).toFixed(2) }} PSI
+                    </div>
                 </div>
                 <div class="windSpeed">
                     <v-icon name="wi-strong-wind" scale="2.5" />
@@ -133,7 +145,8 @@ export default {
                 </div>
                 <div class="rainChance">
                     <v-icon name="wi-rain" scale="2.5" />
-                    <div class="text">Chance of Rain {{ realtimeData.forecast.forecastday[0].day.daily_chance_of_rain }}%
+                    <div class="text">Chance of Rain {{ realtimeData.forecast.forecastday[0].day.daily_chance_of_rain
+                    }}%
                     </div>
                 </div>
                 <div class="uvIndex">
@@ -148,7 +161,6 @@ export default {
 
 <style scoped>
 .weatherContainer {
-    height: 100vh;
     display: grid;
     grid-template-rows: 70vh 30vh;
     font-family: 'Roboto Mono', monospace;
@@ -228,5 +240,11 @@ export default {
 .uvIndex .text,
 .rainChance .text {
     margin-left: 1vw;
+}
+
+@media screen and (max-width: 800px) {
+    .rightSide {
+        display: none;
+    }
 }
 </style>
