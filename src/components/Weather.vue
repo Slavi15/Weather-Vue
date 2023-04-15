@@ -2,7 +2,8 @@
 export default {
     data() {
         return {
-            realtimeData: []
+            realtimeData: null,
+            loading: true
         }
     },
     created() {
@@ -26,99 +27,96 @@ export default {
             response.then(res => {
                 return res.json();
             }).then(data => {
+                this.loading = false;
                 this.realtimeData = data;
-            });
-        }
-    },
-    mounted() {
-        const weatherContainer = document.querySelector('.weatherContainer');
-        const weekContainer = document.getElementById('weekForecast');
 
-        const mainContainer = document.createElement('div');
-        mainContainer.style.height = '100%';
-        mainContainer.style.display = 'grid';
-        mainContainer.style.gridTemplateColumns = '14.285% 14.285% 14.285% 14.285% 14.285% 14.285% 14.285%';
+                const weatherContainer = document.querySelector('.weatherContainer');
+                const weekContainer = document.getElementById('weekForecast');
 
-        if (window.matchMedia('(max-width: 800px)').matches) {
-            mainContainer.style.display = 'grid';
-            mainContainer.style.gridTemplateColumns = '100%';
-        }
-
-        function unixToDate(dateepoch) {
-            let date = new Date(dateepoch * 1000);
-            let day = date.getDate().toString().padStart(2, '0');
-            let month = (date.getMonth() + 1).toString().padStart(2, '0');
-            let year = date.getFullYear();
-
-            return `${day}/${month}/${year}`;
-        };
-
-        const images = {
-            '0': "url('/images/aurora.png')",
-            '1': "url('/images/buildings.jpg')",
-            '2': "url('/images/conifers_road.jpg')",
-            '3': "url('/images/dock_lake.jpg')",
-            '4': "url('/images/fall_foggy.jpg')",
-            '5': "url('/images/fern.jpg')",
-            '6': "url('/images/forest_path.jpg')",
-            '7': "url('/images/grand_canyon.jpg')",
-            '8': "url('/images/hills.jpg')",
-            '9': "url('/images/landing.jpg')",
-            '10': "url('/images/mountain_lake.jpg')",
-            '11': "url('/images/nature_canyon.jpg')",
-            '12': "url('/images/river_canyon.jpg')",
-            '13': "url('/images/sea_coast.jpg')",
-            '14': "url('/images/trees_sunset.jpg')"
-        };
-
-        const random = Math.floor(Math.random() * 15);
-        weatherContainer.style.backgroundImage = images[random];
-        weatherContainer.style.backgroundAttachment = 'fixed';
-        weatherContainer.style.backgroundRepeat = 'no-repeat';
-        weatherContainer.style.backgroundSize = 'cover';
-
-        if (this.realtimeData.forecast.forecastday !== undefined) {
-            this.realtimeData.forecast.forecastday.forEach(item => {
-                const card = document.createElement('div');
-                card.style.height = '90%';
-                card.style.width = '90%';
-                card.style.alignSelf = 'center';
-                card.style.justifySelf = 'center';
-                card.style.display = 'flex';
-                card.style.flexDirection = 'column';
-                card.style.alignItems = 'center';
-                card.style.padding = '10px';
-
-                card.addEventListener('mouseover', () => {
-                    card.style.boxShadow = 'rgba(100, 100, 111, 1) 0px 7px 29px 0px';
-                });
-
-                card.addEventListener('mouseleave', () => {
-                    card.style.boxShadow = 'none';
-                });
+                const mainContainer = document.createElement('div');
+                mainContainer.style.height = '100%';
+                mainContainer.style.display = 'grid';
+                mainContainer.style.gridTemplateColumns = '14.285% 14.285% 14.285% 14.285% 14.285% 14.285% 14.285%';
 
                 if (window.matchMedia('(max-width: 800px)').matches) {
-                    card.style.height = '100%';
+                    mainContainer.style.display = 'grid';
+                    mainContainer.style.gridTemplateColumns = '100%';
                 }
 
-                const day = document.createElement('div');
-                day.textContent = unixToDate(item.date_epoch);
+                function unixToDate(dateepoch) {
+                    let date = new Date(dateepoch * 1000);
+                    let day = date.getDate().toString().padStart(2, '0');
+                    let month = (date.getMonth() + 1).toString().padStart(2, '0');
+                    let year = date.getFullYear();
 
-                const icon = document.createElement('img');
-                icon.src = item.day.condition.icon;
-                icon.style.margin = '2vh auto';
+                    return `${day}/${month}/${year}`;
+                };
 
-                const degrees = document.createElement('div');
-                degrees.textContent = `${item.day.avgtemp_c}°C`;
+                const images = {
+                    '0': "url('/images/aurora.png')",
+                    '1': "url('/images/buildings.jpg')",
+                    '2': "url('/images/conifers_road.jpg')",
+                    '3': "url('/images/dock_lake.jpg')",
+                    '4': "url('/images/fall_foggy.jpg')",
+                    '5': "url('/images/fern.jpg')",
+                    '6': "url('/images/forest_path.jpg')",
+                    '7': "url('/images/grand_canyon.jpg')",
+                    '8': "url('/images/hills.jpg')",
+                    '9': "url('/images/landing.jpg')",
+                    '10': "url('/images/mountain_lake.jpg')",
+                    '11': "url('/images/nature_canyon.jpg')",
+                    '12': "url('/images/river_canyon.jpg')",
+                    '13': "url('/images/sea_coast.jpg')",
+                    '14': "url('/images/trees_sunset.jpg')"
+                };
 
-                card.append(day);
-                card.append(icon);
-                card.append(degrees);
-                mainContainer.append(card);
+                const random = Math.floor(Math.random() * 15);
+                weatherContainer.style.backgroundImage = images[random];
+
+                if (this.loading === false) {
+                    this.realtimeData.forecast.forecastday.forEach(item => {
+                        const card = document.createElement('div');
+                        card.style.height = '90%';
+                        card.style.width = '90%';
+                        card.style.alignSelf = 'center';
+                        card.style.justifySelf = 'center';
+                        card.style.display = 'flex';
+                        card.style.flexDirection = 'column';
+                        card.style.alignItems = 'center';
+                        card.style.padding = '10px';
+
+                        card.addEventListener('mouseover', () => {
+                            card.style.boxShadow = 'rgba(100, 100, 111, 1) 0px 7px 29px 0px';
+                        });
+
+                        card.addEventListener('mouseleave', () => {
+                            card.style.boxShadow = 'none';
+                        });
+
+                        if (window.matchMedia('(max-width: 800px)').matches) {
+                            card.style.height = '100%';
+                        }
+
+                        const day = document.createElement('div');
+                        day.textContent = unixToDate(item.date_epoch);
+
+                        const icon = document.createElement('img');
+                        icon.src = item.day.condition.icon;
+                        icon.style.margin = '2vh auto';
+
+                        const degrees = document.createElement('div');
+                        degrees.textContent = `${item.day.avgtemp_c}°C`;
+
+                        card.append(day);
+                        card.append(icon);
+                        card.append(degrees);
+                        mainContainer.append(card);
+                    });
+                };
+
+                weekContainer.append(mainContainer);
             });
-        };
-
-        weekContainer.append(mainContainer);
+        }
     }
 }
 </script>
@@ -127,11 +125,11 @@ export default {
     <div class="weatherContainer">
         <div class="currentWeather">
             <div class="leftSide">
-                <img class="weatherIcon" v-if="realtimeData.current.condition.icon !== undefined" :src="realtimeData.current.condition.icon" />
-                <p class="condition" v-if="realtimeData.current.condition.text !== undefined">{{ realtimeData.current.condition.text }}</p>
-                <p class="location" v-if="realtimeData.location.name !== undefined && realtimeData.location.country !== undefined">{{ realtimeData.location.name }}, {{
+                <img class="weatherIcon" v-if="loading === false" :src="realtimeData.current.condition.icon" />
+                <p class="condition" v-if="loading === false">{{ realtimeData.current.condition.text }}</p>
+                <p class="location" v-if="loading === false">{{ realtimeData.location.name }}, {{
                     realtimeData.location.country }}</p>
-                <div class="temperature" v-if="realtimeData.current.temp_c !== undefined">{{ realtimeData.current.temp_c }}°C</div>
+                <div class="temperature" v-if="loading === false">{{ realtimeData.current.temp_c }}°C</div>
                 <button @click="landingPage" class="locationButton">
                     <v-icon name="co-location-pin" />
                     <div class="text">Change location</div>
@@ -140,27 +138,28 @@ export default {
             <div class="rightSide">
                 <div class="humidity">
                     <v-icon name="wi-raindrop" scale="2.5" />
-                    <div class="text" v-if="realtimeData.current.humidity !== undefined">Humidity {{ realtimeData.current.humidity }}%</div>
+                    <div class="text" v-if="loading === false">Humidity {{ realtimeData.current.humidity }}%</div>
                 </div>
                 <div class="pressure">
                     <v-icon name="wi-cloud-down" scale="2.5" />
-                    <div class="text" v-if="realtimeData.current.pressure_mb !== undefined">Air Pressure {{ (realtimeData.current.pressure_mb * 0.0155).toFixed(2) }} PSI
+                    <div class="text" v-if="loading === false">Air Pressure {{ (realtimeData.current.pressure_mb *
+                        0.0155).toFixed(2) }} PSI
                     </div>
                 </div>
                 <div class="windSpeed">
                     <v-icon name="wi-strong-wind" scale="2.5" />
-                    <div class="text" v-if="realtimeData.current.wind_kph !== undefined">Wind speed {{ realtimeData.current.wind_kph }} km/h</div>
+                    <div class="text" v-if="loading === false">Wind speed {{ realtimeData.current.wind_kph }} km/h</div>
                 </div>
                 <div class="rainChance">
                     <v-icon name="wi-rain" scale="2.5" />
-                    <div class="text" v-if="realtimeData.forecast.forecastday[0].day.daily_chance_of_rain !== undefined">Chance of Rain {{
+                    <div class="text" v-if="loading === false">Chance of Rain {{
                         realtimeData.forecast.forecastday[0].day.daily_chance_of_rain
                     }}%
                     </div>
                 </div>
                 <div class="uvIndex">
                     <v-icon name="wi-day-sunny" scale="2.5" />
-                    <div class="text" v-if="realtimeData.current.uv !== undefined">UV Index {{ realtimeData.current.uv }}</div>
+                    <div class="text" v-if="loading === false">UV Index {{ realtimeData.current.uv }}</div>
                 </div>
             </div>
         </div>
@@ -172,6 +171,9 @@ export default {
 .weatherContainer {
     display: grid;
     grid-template-rows: 70vh 30vh;
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
     font-family: 'Roboto Mono', monospace;
     color: white;
 }
@@ -251,9 +253,23 @@ export default {
     margin-left: 1vw;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 799px) {
+    .leftSide {
+        margin-left: 8vw;
+    }
+
     .rightSide {
         display: none;
+    }
+}
+
+@media screen and (min-width: 800px) and (max-width: 1000px) {
+    .leftSide {
+        margin-left: 10vw;
+    }
+
+    .rightSide {
+        margin-right: 5vw;
     }
 }
 </style>
