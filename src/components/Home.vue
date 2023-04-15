@@ -14,7 +14,7 @@ export default {
       let location = document.querySelector('input').value;
       const KEY = import.meta.env.VITE_WEATHERAPI_KEY;
 
-      const response = fetch(`http://api.weatherapi.com/v1/search.json?key=${KEY}&q=${location}`);
+      const response = fetch(`https://api.weatherapi.com/v1/search.json?key=${KEY}&q=${location}`);
       response.then(res => {
         return res.json();
       }).then(data => {

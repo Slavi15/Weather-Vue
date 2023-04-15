@@ -11,7 +11,7 @@ export default {
 
         const realtimeData = ref([]);
 
-        const response = fetch(`http://api.weatherapi.com/v1/forecast.json?key=${KEY}&q=${location}&days=7&aqi=yes`);
+        const response = fetch(`https://api.weatherapi.com/v1/forecast.json?key=${KEY}&q=${location}&days=7&aqi=yes`);
         response.then(res => {
             return res.json();
         }).then(data => {
