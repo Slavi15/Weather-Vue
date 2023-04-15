@@ -87,14 +87,13 @@ export default {
 
 <style scoped>
   .homeContainer {
-    background-image: url('./images/landing.jpg');
-    background-size: cover;
     display: grid;
     grid-template-rows: 50% 50%;
     grid-template-columns: auto;
     height: 100vh;
     align-items: center;
     justify-items: center;
+    background-color: whitesmoke;
   }
 
   .title {
@@ -102,7 +101,7 @@ export default {
     text-align: center;
     font-size: 3.5em;
     font-weight: 600;
-    color: white;
+    color: #282828;
     letter-spacing: 3px;
     align-self: flex-end;
     margin-bottom: 5vh;
@@ -127,8 +126,8 @@ export default {
     text-transform: uppercase;
     font-size: 14px;
     padding-left: 1vw;
-    background-color: whitesmoke;
-    border: 1px solid #C6C6C6;
+    background-color: white;
+    border: none;
     outline: none;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   }

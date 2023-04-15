@@ -15,7 +15,6 @@ export default {
         response.then(res => {
             return res.json();
         }).then(data => {
-            console.log(data);
             realtimeData.value = data;
         });
 
@@ -27,7 +26,9 @@ export default {
         }
     },
     mounted() {
+        const weatherContainer = document.querySelector('.weatherContainer');
         const weekContainer = document.getElementById('weekForecast');
+
         const mainContainer = document.createElement('div');
         mainContainer.style.height = '100%';
         mainContainer.style.display = 'grid';
@@ -42,7 +43,29 @@ export default {
             return `${day}/${month}/${year}`;
         };
 
-        this.realtimeData.forecast.forecastday.forEach((item, index) => {
+        const images = {
+            '0': "url('/images/aurora.png')",
+            '1': "url('/images/buildings.jpg')",
+            '2': "url('/images/conifers_road.jpg')",
+            '3': "url('/images/dock_lake.jpg')",
+            '4': "url('/images/fall_foggy.jpg')",
+            '5': "url('/images/fern.jpg')",
+            '6': "url('/images/forest_path.jpg')",
+            '7': "url('/images/grand_canyon.jpg')",
+            '8': "url('/images/hills.jpg')",
+            '9': "url('/images/landing.jpg')",
+            '10': "url('/images/mountain_lake.jpg')",
+            '11': "url('/images/nature_canyon.jpg')",
+            '12': "url('/images/river_canyon.jpg')",
+            '13': "url('/images/sea_coast.jpg')",
+            '14': "url('/images/trees_sunset.jpg')"
+        };
+
+        const random = Math.floor(Math.random() * 15);
+        weatherContainer.style.backgroundImage = images[random];
+        weatherContainer.style.backgroundSize = 'cover';
+
+        this.realtimeData.forecast.forecastday.forEach(item => {
             const card = document.createElement('div');
             card.style.height = '90%';
             card.style.width = '90%';
@@ -126,8 +149,6 @@ export default {
 <style scoped>
 .weatherContainer {
     height: 100vh;
-    background-image: url('./images/landing.jpg');
-    background-size: cover;
     display: grid;
     grid-template-rows: 70vh 30vh;
     font-family: 'Roboto Mono', monospace;
