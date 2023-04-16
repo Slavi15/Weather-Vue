@@ -42,6 +42,7 @@ export default {
             cardData.style.textAlign = 'center';
             cardData.style.fontFamily = 'Poppins';
             cardData.style.fontSize = '14px';
+            cardData.style.color = '#282828';
             cardData.style.textTransform = 'uppercase';
             cardData.style.letterSpacing = '2px';
             cardData.style.lineHeight = '5vh';
