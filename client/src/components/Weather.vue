@@ -52,7 +52,7 @@ export default {
                     return `${day}/${month}/${year}`;
                 };
 
-                const imageResponse = fetch(`https://imagesapi-w4ba.onrender.com/api/countries/${location.split(', ').length > 1 ? location.split(', ')[1] : location}`);
+                const imageResponse = fetch(`https://weather-images.onrender.com/api/countries/${location.split(', ').length > 1 ? location.split(', ')[1] : location}`);
                 imageResponse.then(res => {
                     return res.json();
                 }).then(data => {
