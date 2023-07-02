@@ -1,0 +1,7 @@
+client/node_modules
+api/node_modules
+
+client/.env.production
+client/.env.local
+
+api/.env
